@@ -3,24 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login de Administrador</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Inicio de Sesión</title>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Acceso Administrador</h2>
-        <form id="loginForm">
-            <label for="username">Usuario:</label>
-            <input type="text" id="username" required>
-            
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" required>
-            
-            <button type="submit">Iniciar sesión</button>
-        </form>
-        <p id="error-message"></p>
-    </div>
 
-    <script src="script.js"></script>
+    <h2>Inicio de Sesión</h2>
+    <input type="text" id="username" placeholder="Nombre de usuario">
+    <button onclick="agregarUsuario()">Registrar Usuario</button>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCYfDp-FeHJ0-1InhZOcGRegHavvUFIckw",
+            authDomain: "databasechofer.firebaseapp.com",
+            projectId: "databasechofer",
+            storageBucket: "databasechofer.firebaseapp.com",
+            messagingSenderId: "321776427857",
+            appId: "1:321776427857:web:4aa3e868c0ce8996446970",
+            measurementId: "G-WERC0XVNF0"
+        };
+
+        // Inicializar Firebase y Firestore
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Función para obtener usuarios
+        async function obtenerUsuarios() {
+            const querySnapshot = await db.collection("usuarios").get();
+            querySnapshot.forEach(doc => {
+                console.log(`Usuario: ${doc.id}, Token: ${doc.data().token}`);
+            });
+        }
+
+        // Función para agregar usuarios
+        async function agregarUsuario() {
+            const username = document.getElementById("username").value;
+            if (username.trim() === "") {
+                alert("Por favor, ingresa un nombre de usuario.");
+                return;
+            }
+            const token = Math.random().toString(36).substr(2, 10);
+            await db.collection("usuarios").add({ username, token });
+            console.log(`Usuario ${username} agregado con token: ${token}`);
+            alert(`Usuario ${username} agregado correctamente!`);
+        }
+
+        // Obtener usuarios al cargar la página
+        obtenerUsuarios();
+    </script>
+
 </body>
 </html>
