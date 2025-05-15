@@ -13,7 +13,7 @@
 
     <h2>Inicio de Sesión</h2>
     <input type="text" id="username" placeholder="Nombre de usuario">
-    <button onclick="agregarUsuario()">Registrar Usuario</button>
+    <button id="registrarBtn">Registrar Usuario</button>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -42,7 +42,7 @@
             }
 
             // Función para agregar un usuario
-            window.agregarUsuario = function() {
+            function agregarUsuario() {
                 const username = document.getElementById("username").value.trim();
                 if (!username) {
                     alert("Por favor, ingresa un nombre de usuario.");
@@ -55,7 +55,10 @@
                         alert(`Usuario ${username} agregado correctamente!`);
                     })
                     .catch(error => console.error("Error al agregar usuario:", error));
-            };
+            }
+
+            // Conectar la función al botón
+            document.getElementById("registrarBtn").addEventListener("click", agregarUsuario);
 
             // Obtener usuarios al cargar la página
             obtenerUsuarios();
