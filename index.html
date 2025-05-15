@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
 
-    <!-- Firebase CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+    <!-- Cargar Firebase desde la CDN -->
+    <script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 </head>
 <body>
 
@@ -16,48 +16,50 @@
     <button onclick="agregarUsuario()">Registrar Usuario</button>
 
     <script>
-        // Configurar Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCYfDp-FeHJ0-1InhZOcGRegHavvUFIckw",
-            authDomain: "databasechofer.firebaseapp.com",
-            projectId: "databasechofer",
-            storageBucket: "databasechofer.firebaseapp.com",
-            messagingSenderId: "321776427857",
-            appId: "1:321776427857:web:4aa3e868c0ce8996446970",
-            measurementId: "G-WERC0XVNF0"
-        };
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configurar Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyCYfDp-FeHJ0-1InhZOcGRegHavvUFIckw",
+                authDomain: "databasechofer.firebaseapp.com",
+                projectId: "databasechofer",
+                storageBucket: "databasechofer.firebaseapp.com",
+                messagingSenderId: "321776427857",
+                appId: "1:321776427857:web:4aa3e868c0ce8996446970",
+                measurementId: "G-WERC0XVNF0"
+            };
 
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+            // Inicializar Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
 
-        // Función para obtener usuarios
-        function obtenerUsuarios() {
-            db.collection("usuarios").get().then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                    console.log(`Usuario: ${doc.id}, Token: ${doc.data().token}`);
-                });
-            }).catch(error => console.error("Error al obtener usuarios:", error));
-        }
-
-        // Función para agregar un usuario
-        function agregarUsuario() {
-            const username = document.getElementById("username").value.trim();
-            if (!username) {
-                alert("Por favor, ingresa un nombre de usuario.");
-                return;
+            // Función para obtener usuarios
+            function obtenerUsuarios() {
+                db.collection("usuarios").get().then(querySnapshot => {
+                    querySnapshot.forEach(doc => {
+                        console.log(`Usuario: ${doc.id}, Token: ${doc.data().token}`);
+                    });
+                }).catch(error => console.error("Error al obtener usuarios:", error));
             }
-            const token = Math.random().toString(36).substr(2, 10);
-            db.collection("usuarios").add({ username, token })
-                .then(() => {
-                    console.log(`Usuario ${username} agregado con token: ${token}`);
-                    alert(`Usuario ${username} agregado correctamente!`);
-                })
-                .catch(error => console.error("Error al agregar usuario:", error));
-        }
 
-        // Obtener usuarios al cargar la página
-        obtenerUsuarios();
+            // Función para agregar un usuario
+            window.agregarUsuario = function() {
+                const username = document.getElementById("username").value.trim();
+                if (!username) {
+                    alert("Por favor, ingresa un nombre de usuario.");
+                    return;
+                }
+                const token = Math.random().toString(36).substr(2, 10);
+                db.collection("usuarios").add({ username, token })
+                    .then(() => {
+                        console.log(`Usuario ${username} agregado con token: ${token}`);
+                        alert(`Usuario ${username} agregado correctamente!`);
+                    })
+                    .catch(error => console.error("Error al agregar usuario:", error));
+            };
+
+            // Obtener usuarios al cargar la página
+            obtenerUsuarios();
+        });
     </script>
 
 </body>
