@@ -1,4 +1,8 @@
 # utilmente.github.io
+Este script está diseñado para gestionar el acceso de usuarios mediante un sistema de tokens únicos, garantizando que cada usuario solo pueda ingresar una vez a una sección específica. Una vez utilizado, el token se invalida y se genera uno nuevo, asegurando que el anterior quede inutilizable. Cada usuario posee un token único, mientras que solo el administrador tiene la capacidad de autenticarse con su clave y generar nuevos tokens válidos para permitir el acceso.
 
-este script está destinado para filtrar usuarios y darle derecho entrar una sola vez a través de un token a una determinada sección una vez utilizado el token el token se regenera y queda inútil el que puso es un token único por cada usuario solamente el administrador puede iniciar con su clave y generar más token válidos para que los usuarios entren es un script vinculado con firedatabase para una rápida actualización en vivo desde cualquier parte del mundo también se pueden hacer pruebas en servidores locales (localhost) 
-se hizo con la intención de poder cobrar servicios a cambio de un token único para acceder a dicho servicio o a dicha sección o a una página web en específico es como un filtrado de usuario solamente tendrán acceso aquellos que hayan pagado y se le hayan entregado un token válido 
+El script está vinculado a Firebase Database, lo que permite actualizaciones en tiempo real desde cualquier parte del mundo. También admite pruebas en entornos locales (localhost), facilitando el desarrollo y la validación del sistema antes de su implementación.
+
+Este sistema se creó con el propósito de ofrecer servicios bajo un modelo de acceso restringido, donde los usuarios solo pueden ingresar si han realizado un pago y se les ha otorgado un token como un mecanismo de filtrado de usuarios, asegurando que únicamente aquellos con autorización puedan acceder a una página web, sección específica o servicio determinado.
+
+ todos los derechos reservados©© :Utilmente.oficial®
