@@ -3,7 +3,8 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #000; /* 🔹 Fondo negro */
+    color: #fff; /* 🔹 Texto blanco */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,41 +15,50 @@ body {
 /* Encabezado */
 header {
     width: 100%;
-    background-color: #2c3e50;
+    background-color: #1a1a1a; /* 🔹 Color más oscuro para el header */
     color: white;
     text-align: center;
     padding: 20px 0;
+    font-size: 24px; /* 🔹 Tamaño de fuente mejorado */
 }
 
 /* Contenedor principal */
 main {
     width: 90%;
     max-width: 400px;
-    background-color: white;
-    padding: 20px;
+    background-color: #222; /* 🔹 Fondo más oscuro para contraste */
+    padding: 25px;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1); /* 🔹 Sombra ligera en blanco */
     text-align: center;
 }
 
 /* Entrada de token */
 #contenedor input {
     width: 80%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #555; /* 🔹 Bordes más oscuros */
     border-radius: 5px;
+    background-color: #333; /* 🔹 Fondo oscuro */
+    color: white;
 }
 
 /* Botones */
 button {
     width: 85%;
-    padding: 10px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    margin: 10px 0;
+    margin: 12px 0;
+    transition: all 0.3s ease; /* 🔹 Transición para efectos visuales */
+}
+
+/* Efecto de hover para todos los botones */
+button:hover {
+    opacity: 0.8;
 }
 
 /* Estilos específicos de botones */
@@ -57,7 +67,7 @@ button {
     color: white;
 }
 
-#btnAdmin {
+#btnAdmin, #btnConfirmarAdmin { /* 🔹 Mantiene el botón de administrador */
     background-color: #e74c3c;
     color: white;
 }
@@ -76,6 +86,14 @@ button {
 /* Token generado */
 #tokenDisplay {
     font-weight: bold;
-    color: #333;
-    margin-top: 10px;
+    color: #fff;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #444; /* 🔹 Fondo oscuro */
+    border-radius: 5px;
 }
+
+/* Mejor separación entre elementos */
+#contenedor, #adminAccess, #adminPanel {
+    margin-top: 20px;
+    }
