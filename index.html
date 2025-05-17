@@ -19,22 +19,21 @@
         </div>
 
         <!-- Panel de administrador (solo accesible con contraseña) -->
+        <div id="adminAccess">
+            <input type="password" id="passwordInput" placeholder="Ingresa la contraseña">
+            <button id="btnConfirmarAdmin">Confirmar</button>
+        </div>
+
         <div id="adminPanel" style="display: none;">
             <button id="btnGenerarToken">Generar Token</button>
             <button id="btnMostrarToken" style="display: none;">Mostrar Token Válido</button>
             <p id="tokenDisplay"></p> <!-- Aquí se mostrará el token -->
         </div>
-
-        <!-- Botón de acceso a administración -->
-        <div id="adminAccess">
-            <button id="btnAdmin">Administrador</button>
-        </div>
     </main>
 
-    <!-- Cargar Firebase en modo compatibilidad para evitar módulos (import/export) -->
+    <!-- Cargar Firebase en modo compatibilidad -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <!-- Cargar nuestro script personalizado -->
     <script src="script.js"></script>
 </body>
 </html>
