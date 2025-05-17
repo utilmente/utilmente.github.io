@@ -47,29 +47,29 @@ async function validarToken() {
                 }, 3000);
             } else {
                 console.log("❌ Token inválido, solicita uno nuevo");
-                alert("Token inválido. Genera un nuevo token.");
+                alert("Token incorrecto.");
             }
         } else {
             console.log("❌ No se encontró token en Firestore");
-            alert("No existe token, genéralo primero.");
+            alert("No hay token disponible.");
         }
     } catch (error) {
         console.error("Error al validar token:", error);
     }
 }
 
-// Función para confirmar acceso de administrador
+// Función para solicitar acceso de administrador
 function solicitarClave() {
     console.log("solicitarClave() invocado");
-    const claveIngresada = document.getElementById("passwordInput").value;
+    const clave = prompt("Ingresa la contraseña:");
 
-    if (claveIngresada === "pepe") {
+    if (clave === "pepe") {
         console.log("✅ Acceso de administrador concedido");
         document.getElementById("adminPanel").style.display = "block";
         document.getElementById("btnMostrarToken").style.display = "inline"; // Muestra el botón de mostrar token
     } else {
         console.log("❌ Contraseña incorrecta");
-        alert("Contraseña incorrecta");
+        alert("Contraseña incorrecta.");
     }
 }
 
@@ -82,7 +82,7 @@ async function generarToken() {
 
     if (docSnap.exists) {
         console.log("⚠️ Ya hay un token generado:", docSnap.data().token);
-        alert("Ya tienes un token activo. Úsalo antes de generar otro.");
+        alert("Ya hay un token activo.");
         return;
     }
 
@@ -90,8 +90,8 @@ async function generarToken() {
 
     try {
         await tokenDoc.set({ token: nuevoToken });
-        document.getElementById("tokenDisplay").textContent = "Nuevo token generado: " + nuevoToken;
-        console.log("✅ Nuevo token generado correctamente:", nuevoToken);
+        document.getElementById("tokenDisplay").textContent = "Token generado: " + nuevoToken;
+        console.log("✅ Token generado correctamente:", nuevoToken);
     } catch (error) {
         console.error("❌ Error al generar token:", error);
     }
@@ -106,37 +106,13 @@ async function mostrarToken() {
         const docSnap = await tokenDoc.get();
         if (docSnap.exists) {
             const tokenActual = docSnap.data().token;
-            console.log("🔹 Token válido recuperado:", tokenActual);
+            console.log("🔹 Token recuperado:", tokenActual);
             document.getElementById("tokenDisplay").textContent = "Token válido: " + tokenActual;
         } else {
             console.log("❌ No hay un token almacenado.");
-            alert("No hay un token activo en Firestore.");
+            alert("No hay un token activo.");
         }
     } catch (error) {
         console.error("❌ Error al recuperar token:", error);
     }
 }
-
-// Asignar eventos a los botones cuando el DOM esté completamente cargado
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM completamente cargado");
-
-    const btnEntrar = document.getElementById("btnEntrar");
-    const btnConfirmarAdmin = document.getElementById("btnConfirmarAdmin");
-    const btnGenerarToken = document.getElementById("btnGenerarToken");
-    const btnMostrarToken = document.getElementById("btnMostrarToken");
-
-    if (btnEntrar) {
-        btnEntrar.addEventListener("click", validarToken);
-    }
-    if (btnConfirmarAdmin) {
-        btnConfirmarAdmin.addEventListener("click", solicitarClave);
-    }
-    if (btnGenerarToken) {
-        btnGenerarToken.addEventListener("click", generarToken);
-    }
-    if (btnMostrarToken) {
-        btnMostrarToken.style.display = "none"; // Oculta el botón hasta que el administrador acceda
-        btnMostrarToken.addEventListener("click", mostrarToken);
-    }
-});
