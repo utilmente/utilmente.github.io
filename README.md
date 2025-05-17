@@ -1,1 +1,4 @@
 # utilmente.github.io
+
+este script está destinado para filtrar usuarios y darle derecho entrar una sola vez a través de un token a una determinada sección una vez utilizado el token el token se regenera y queda inútil el que puso es un token único por cada usuario solamente el administrador puede iniciar con su clave y generar más token válidos para que los usuarios entren es un script vinculado con firedatabase para una rápida actualización en vivo desde cualquier parte del mundo también se pueden hacer pruebas en servidores locales (localhost) 
+se hizo con la intención de poder cobrar servicios a cambio de un token único para acceder a dicho servicio o a dicha sección o a una página web en específico es como un filtrado de usuario solamente tendrán acceso aquellos que hayan pagado y se le hayan entregado un token válido 
