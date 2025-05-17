@@ -1,0 +1,81 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Encabezado */
+header {
+    width: 100%;
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Contenedor principal */
+main {
+    width: 90%;
+    max-width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Entrada de token */
+#contenedor input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Botones */
+button {
+    width: 85%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+/* Estilos específicos de botones */
+#btnEntrar {
+    background-color: #27ae60;
+    color: white;
+}
+
+#btnAdmin {
+    background-color: #e74c3c;
+    color: white;
+}
+
+#btnGenerarToken {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Panel de administración */
+#adminPanel {
+    display: none;
+    margin-top: 20px;
+}
+
+/* Token generado */
+#tokenDisplay {
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
