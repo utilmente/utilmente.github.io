@@ -36,9 +36,8 @@ async function validarToken() {
 
             if (tokenGuardado === tokenIngresado) {
                 console.log("✅ Token válido, redirigiendo...");
-                alert("Token válido, redirigiendo...");
-
-                // Redirigir inmediatamente
+                
+                // 🔹 Redirección directa sin notificaciones
                 window.location.href = "go:token";
 
                 // Se espera 3 segundos antes de eliminar el token
@@ -59,12 +58,12 @@ async function validarToken() {
     }
 }
 
-// Función para solicitar acceso de administrador
+// Función para confirmar acceso de administrador
 function solicitarClave() {
     console.log("solicitarClave() invocado");
-    const clave = prompt("Ingresa la contraseña:");
+    const claveIngresada = document.getElementById("passwordInput").value;
 
-    if (clave === "pepe") {
+    if (claveIngresada === "pepe") {
         console.log("✅ Acceso de administrador concedido");
         document.getElementById("adminPanel").style.display = "block";
         document.getElementById("btnMostrarToken").style.display = "inline"; // Muestra el botón de mostrar token
@@ -74,7 +73,7 @@ function solicitarClave() {
     }
 }
 
-// Función para generar un nuevo token (solo administrador)
+// Función para generar un nuevo token
 async function generarToken() {
     console.log("generarToken() invocado");
 
@@ -123,17 +122,15 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM completamente cargado");
 
     const btnEntrar = document.getElementById("btnEntrar");
-    const btnAdmin = document.getElementById("btnAdmin");
+    const btnConfirmarAdmin = document.getElementById("btnConfirmarAdmin");
     const btnGenerarToken = document.getElementById("btnGenerarToken");
     const btnMostrarToken = document.getElementById("btnMostrarToken");
-
-    console.log("Elementos - btnEntrar:", btnEntrar, "btnAdmin:", btnAdmin, "btnGenerarToken:", btnGenerarToken, "btnMostrarToken:", btnMostrarToken);
 
     if (btnEntrar) {
         btnEntrar.addEventListener("click", validarToken);
     }
-    if (btnAdmin) {
-        btnAdmin.addEventListener("click", solicitarClave);
+    if (btnConfirmarAdmin) {
+        btnConfirmarAdmin.addEventListener("click", solicitarClave);
     }
     if (btnGenerarToken) {
         btnGenerarToken.addEventListener("click", generarToken);
