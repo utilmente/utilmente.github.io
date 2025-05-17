@@ -36,9 +36,8 @@ async function validarToken() {
 
             if (tokenGuardado === tokenIngresado) {
                 console.log("✅ Token válido, redirigiendo...");
-                alert("Token válido, redirigiendo...");
-
-                // Redirigir inmediatamente
+                
+                // 🔹 Redirección directa sin notificaciones
                 window.location.href = "go:token";
 
                 // Se espera 3 segundos antes de eliminar el token
