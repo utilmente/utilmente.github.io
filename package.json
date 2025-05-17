@@ -1,0 +1,12 @@
+{
+  "name": "portero",
+  "version": "1.0.0",
+  "description": "Servidor local para Portero",
+  "scripts": {
+    "start": "npx lite-server"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
