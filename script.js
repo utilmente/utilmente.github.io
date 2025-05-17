@@ -61,7 +61,7 @@ function solicitarClave() {
     console.log("solicitarClave() invocado");
     const claveIngresada = document.getElementById("passwordInput").value;
     
-    if (claveIngresada === "pepe") {
+    if (claveIngresada === "991022J") {
         console.log("✅ Acceso de administrador concedido");
         document.getElementById("adminPanel").style.display = "block";
         document.getElementById("btnMostrarToken").style.display = "inline"; // Muestra el botón de mostrar token
