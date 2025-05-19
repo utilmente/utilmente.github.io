@@ -1,7 +1,7 @@
 /* Estilos generales */
 body {
-    background-color: #000;  
-    color: #fff;  
+    background-color: #000;
+    color: #fff;
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 0;
@@ -11,10 +11,10 @@ body {
 /* Contenedor principal */
 #container {
     width: 100%;
-    max-width: 500px; /* 🔹 Contenedor más grande */
+    max-width: 500px; /* 🔹 Contenedor más grande - Mantengo este valor si lo prefieres */
     margin: 30px auto 0;
     padding: 25px;
-    background-color: #222; 
+    background-color: #222;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
 }
@@ -32,7 +32,7 @@ input {
 
 /* Botón verde "Entrar" */
 #btnEntrar {
-    background-color: #00a651;  
+    background-color: #00a651;
     color: #fff;
     padding: 14px;
     border: none;
@@ -43,12 +43,12 @@ input {
 }
 
 #btnEntrar:hover {
-    background-color: #007d3d;  
+    background-color: #007d3d;
 }
 
 /* Botón azul "Confirmar" */
 #btnConfirmarAdmin {
-    background-color: #007bff;  
+    background-color: #007bff;
     color: #fff;
     padding: 14px;
     border: none;
@@ -59,39 +59,39 @@ input {
 }
 
 #btnConfirmarAdmin:hover {
-    background-color: #0056b3;  
+    background-color: #0056b3;
 }
 
 /* Botón naranja "Generar Token" */
 #btnGenerarToken {
-    background-color: #ff9800;  
+    background-color: #ff9800;
     color: #fff;
-    padding: 14px;  
+    padding: 14px;
     border: none;
     border-radius: 8px;
-    font-size: 16px;  
+    font-size: 16px;
     cursor: pointer;
     width: 100%;
 }
 
 #btnGenerarToken:hover {
-    background-color: #e68900;  
+    background-color: #e68900;
 }
 
 /* Botón morado "Mostrar Token Válido" */
 #btnMostrarToken {
-    background-color: #673ab7;  
+    background-color: #673ab7;
     color: #fff;
-    padding: 14px;  
+    padding: 14px;
     border: none;
     border-radius: 8px;
-    font-size: 16px;  
+    font-size: 16px;
     cursor: pointer;
     width: 100%;
 }
 
 #btnMostrarToken:hover {
-    background-color: #5e35b1;  
+    background-color: #5e35b1;
 }
 
 /* Contenedor de la lista de tokens */
@@ -99,7 +99,7 @@ input {
     text-align: left;
     margin-top: 20px;
     padding: 18px;
-    background-color: #444;  
+    background-color: #444; /* Mantengo este fondo si te parece bien para diferenciar */
     border-radius: 8px;
 }
 
@@ -124,7 +124,7 @@ input {
 
 /* Estilos de los botones de copiar */
 .copy-btn {
-    background-color: #00c4ff;  
+    background-color: #00c4ff;
     color: #fff;
     padding: 6px 10px;
     border: none;
@@ -134,5 +134,153 @@ input {
 }
 
 .copy-btn:hover {
-    background-color: #0093cc;  
+    background-color: #0093cc;
+}
+
+/* Estilos para el panel de administrador */
+#adminPanel {
+    text-align: left; /* Alinea el contenido del panel a la izquierda */
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #000; /* Volvemos al fondo negro */
+    border-radius: 8px;
+    max-height: 600px; /* Ajusta esta altura según lo necesites */
+    overflow-y: auto; /* Habilita el scroll vertical cuando el contenido excede max-height */
+}
+
+/* Estilos para la tabla de usuarios */
+#listaUsuarios {
+    width: 100%; /* La tabla ocupa todo el ancho del panel */
+    border-collapse: collapse; /* Evita bordes dobles entre celdas */
+    margin-top: 10px;
+    border-radius: 8px; /* Bordes redondeados para la tabla */
+    overflow: hidden; /* Necesario para que border-radius funcione en las filas */
+    margin-bottom: 20px; /* O el margen que tengas actualmente */
+    /* max-height: 300px;  Eliminado para que el scroll sea en el panel */
+    /* overflow-y: auto;     Eliminado para que el scroll sea en el panel */
+}
+
+/* Estilos para la cabecera de la tabla */
+#listaUsuarios thead th {
+    background-color: #333; /* Un fondo oscuro para la cabecera */
+    color: #fff;
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 1px solid #555;
+}
+
+/* Estilos para las filas del cuerpo de la tabla */
+#listaUsuarios tbody tr {
+    background-color: #222; /* Un fondo oscuro para las filas */
+    color: #fff;
+}
+
+#listaUsuarios tbody tr:nth-child(even) {
+    background-color: #282828; /* Un color ligeramente diferente para filas pares */
+}
+
+#listaUsuarios tbody tr:hover {
+    background-color: #333; /* Resaltar la fila al pasar el ratón */
+}
+
+/* Estilos para las celdas de la tabla */
+#listaUsuarios tbody td {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    text-align: left;
+}
+
+/* Estilos para los botones dentro de la tabla */
+#listaUsuarios button {
+    background-color: #555; /* Un gris más oscuro para los botones de la tabla */
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 5px; /* Espacio entre botones */
+}
+
+#listaUsuarios button:hover {
+    background-color: #666;
+}
+
+/* Estilos específicos para el botón de eliminar */
+#listaUsuarios button.delete-btn {
+    background-color: #dc3545; /* Rojo para el botón de eliminar */
+    margin-right: 5px; /* Añadido margen derecho */
+}
+
+#listaUsuarios button.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Estilos específicos para el botón de inactivar/activar */
+#listaUsuarios button.inactive-btn {
+    background-color: #ffc107; /* Amarillo para el botón de inactivar/activar */
+    color: #000;
+}
+
+#listaUsuarios button.inactive-btn:hover {
+    background-color: #e0a800;
+}
+
+/* Estilos para los inputs dentro de la tabla */
+#listaUsuarios input[type="datetime-local"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 5px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #222;
+    color: #fff;
+    box-sizing: border-box; /* Incluir padding y border en el ancho */
+}
+
+/* Ajuste del contenedor principal si es necesario para la tabla */
+/* #container {
+    max-width: 90%; /* O un valor que se ajuste mejor a tu diseño */
+/* } */
+
+/* Estilos para el botón "Ir a Login" */
+#btnLogin {
+    background-color: #007bff; /* Un color azul similar al botón "Confirmar" */
+    color: #fff;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%; /* O un ancho menor si prefieres */
+    margin-top: 20px; /* Añade un espacio arriba del botón */
+}
+
+#btnLogin:hover {
+    background-color: #0056b3; /* Un tono más oscuro al pasar el ratón */
+}
+
+#adminAccess {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #222; /* Un fondo oscuro para que destaque */
+    color: #fff;
+    text-align: center; /* Centrar el contenido dentro */
+    padding: 15px 0; /* Espacio arriba y abajo */
+    z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+    margin-top: 20px; /* Añade un margen superior para separar de la tabla */
+}
+
+#adminAccess input[type="password"] {
+    margin: 0 10px; /* Un poco de margen a los lados del input */
+}
+
+/* Puedes ajustar el estilo del botón si es necesario para que encaje */
+#adminAccess button#btnConfirmarAdmin {
+    /* Puedes quitar estilos como width: 100% si lo tiene para que se centre */
+    width: auto;
+    margin: 0 10px;
 }

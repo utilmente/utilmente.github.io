@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Iniciar Sesión</h1>
+    </header>
+
+    <main>
+        <div id="loginForm">
+            <input type="text" id="loginUser" placeholder="Ingrese su usuario">
+            <input type="password" id="loginPassword" placeholder="Ingrese su contraseña">
+            <button id="btnLogin">Iniciar Sesión</button>
+        </div>
+
+        <p id="errorMensaje" style="color: red; display: none;">❌ Usuario o contraseña incorrectos.</p>
+    </main>
+
+    <!-- Cargar Firebase sin módulos -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>
