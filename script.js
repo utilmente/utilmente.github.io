@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     contador++;
                 });
                 listaTokens += "</ul>";
-                console.log("🔹 Tokens activos:", listaTokens);
+                // console.log("🔹 Tokens activos:", listaTokens);
                 document.getElementById("tokenDisplay").innerHTML = listaTokens;
 
                 const copyButtons = document.querySelectorAll(".copy-btn");
