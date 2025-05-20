@@ -19,7 +19,7 @@ async function testFirebaseConnection() {
         console.error("Prueba de conexión a Firebase fallida:", error);
         const vpnMensaje = document.getElementById("vpn-mensaje");
         if (vpnMensaje && error.code === 'unavailable') {
-            vpnMensaje.textContent = "Importante: Parece que hay un problema de conexión con nuestros servidores. Por favor, asegúrate de estar conectado a través de una VPN si accedes desde Cuba.";
+            vpnMensaje.textContent = "Importante: Si lees esto es porque no conexión con el servidor (VPN obligatorio)para que funcione.";
             vpnMensaje.style.display = 'block';
         }
     }
