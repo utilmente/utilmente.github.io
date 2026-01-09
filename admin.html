@@ -672,7 +672,7 @@
         // ============================================
         
         // TU URL DE API - REEMPLAZA ESTA PARTE
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxazYQ1ZQUZNZ2WWR73W6gL_hn54KX7ptt0WuWpHoG8du-ake24aU4HUe3irv-Efjs1AA/exec'; 
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxazYQ1ZQUZNZ2WWR73W6gL_hn54KX7ptt0WuWpHoG8du-ake24aU4HUe3irv-Efjs1AA/exec';
         // ↑↑↑↑↑↑↑↑↑↑↑ REEMPLAZA ESTO CON TU URL REAL ↑↑↑↑↑↑↑↑↑↑↑
         
         // CONTRASEÑA DE ADMIN (la misma que en Google Sheets)
@@ -799,36 +799,60 @@
         // ============================================
         // FUNCIONES DE LA API
         // ============================================
-        
-        // Llamada genérica a la API
-        async function callAPI(action, params = {}) {
-            try {
-                // Agregar password si estamos autenticados
-                if (isAuthenticated && adminPassword && !params.password) {
-                    params.password = adminPassword;
-                }
-                
-                params.action = action;
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams(params)
-                });
-                
-                return await response.json();
-                
-            } catch (error) {
-                console.error('Error en API call:', error);
-                return {
-                    success: false,
-                    message: 'Error de conexión con el servidor'
-                };
-            }
+// Llamada genérica a la API
+async function callAPI(action, params = {}) {
+    try {
+        // Agregar password si estamos autenticados
+        if (isAuthenticated && adminPassword && !params.password) {
+            params.password = adminPassword;
         }
         
+        // Agregar acción
+        params.action = action;
+        
+        // IMPORTANTE: Usar parámetros GET para evitar problemas de CORS
+        const queryParams = new URLSearchParams(params);
+        const url = `${API_URL}?${queryParams.toString()}`;
+        
+        console.log('🔗 URL de petición:', url);
+        
+        // Hacer petición GET
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const text = await response.text();
+        let result;
+        
+        try {
+            result = JSON.parse(text);
+        } catch (e) {
+            console.error('❌ Error parsing JSON:', text);
+            return {
+                success: false,
+                message: 'Error en formato de respuesta'
+            };
+        }
+        
+        console.log('📦 Respuesta API:', result);
+        return result;
+        
+    } catch (error) {
+        console.error('❌ Error en callAPI:', error);
+        return {
+            success: false,
+            message: 'Error de conexión: ' + error.message
+        };
+    }
+}
         // ============================================
         // FUNCIONES DE AUTENTICACIÓN
         // ============================================
