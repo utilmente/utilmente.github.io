@@ -412,6 +412,26 @@
             to { transform: rotate(360deg); }
         }
         
+        /* Instrucciones especiales */
+        .instructions-container {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .instructions-container ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .instructions-container li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+        
         /* Footer */
         .footer {
             text-align: center;
@@ -543,11 +563,16 @@
                 <h3 class="result-title" id="successTitle">¡Acceso Premium Activado!</h3>
                 <p class="result-message" id="successMessage"></p>
                 
-                <!-- Contador futurista -->
+                <!-- Contador futurista (solo para AppCreator24) -->
                 <div id="countdownContainer" class="countdown-container" style="display: none;">
                     <div class="countdown-title">Redirección automática a</div>
                     <div class="countdown-display" id="countdownNumber">5</div>
                     <div class="countdown-text">Sección Premium de AppCreator24</div>
+                </div>
+                
+                <!-- Instrucciones (aparecen si NO está en AppCreator24) -->
+                <div id="instructionsContainer" class="instructions-container" style="display: none;">
+                    <!-- Se llena por JavaScript -->
                 </div>
                 
                 <div class="result-details" id="successDetails">
@@ -559,7 +584,7 @@
                         <i class="far fa-copy"></i> Copiar Información
                     </button>
                     <button id="redirectBtn" class="btn btn-primary" style="margin-top: 10px;">
-                        <i class="fas fa-external-link-alt"></i> Ir a AppCreator24 Ahora
+                        <i class="fas fa-external-link-alt"></i> Abrir en AppCreator24
                     </button>
                 </div>
             </div>
@@ -634,13 +659,14 @@
         // URL de tu API (NO VISIBLE PARA USUARIOS)
         const API_URL = 'https://script.google.com/macros/s/AKfycbxazYQ1ZQUZNZ2WWR73W6gL_hn54KX7ptt0WuWpHoG8du-ake24aU4HUe3irv-Efjs1AA/exec';
         
-        // Configuración de redirección INTERNA de AppCreator24
+        // Configuración
         const APP_CREATOR_INTERNAL_LINK = 'go:premiumpro';
         const COUNTDOWN_SECONDS = 5;
         
         // Variables de estado
         let countdownInterval = null;
         let currentCode = '';
+        let isInAppCreator = false;
         
         // ============================================
         // ELEMENTOS DEL DOM
@@ -664,6 +690,46 @@
         
         const countdownContainer = document.getElementById('countdownContainer');
         const countdownNumber = document.getElementById('countdownNumber');
+        const instructionsContainer = document.getElementById('instructionsContainer');
+        
+        // ============================================
+        // DETECCIÓN INTELIGENTE DEL ENTORNO
+        // ============================================
+        
+        // Detectar si estamos en AppCreator24
+        function detectAppCreatorEnvironment() {
+            // Método 1: User Agent (forma más confiable)
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isAppCreatorAgent = userAgent.includes('appcreator') || 
+                                      userAgent.includes('webview');
+            
+            // Método 2: Verificar si está en iframe (modo webview)
+            const isInIframe = window !== window.top;
+            
+            // Método 3: Verificar parámetros especiales
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasAppCreatorParam = urlParams.has('in_appcreator') || 
+                                       urlParams.has('from_appcreator');
+            
+            // Método 4: Intentar acceder a objeto global de AppCreator24
+            let hasAppCreatorGlobal = false;
+            try {
+                hasAppCreatorGlobal = typeof window.AppCreator !== 'undefined' || 
+                                      typeof window.AC24 !== 'undefined';
+            } catch (e) {}
+            
+            const detected = isAppCreatorAgent || isInIframe || hasAppCreatorParam || hasAppCreatorGlobal;
+            
+            console.log('🔍 Detección de entorno AppCreator24:');
+            console.log('  - User Agent:', userAgent.substring(0, 100));
+            console.log('  - Es AppCreator Agent:', isAppCreatorAgent);
+            console.log('  - Está en iframe:', isInIframe);
+            console.log('  - Tiene parámetro AppCreator:', hasAppCreatorParam);
+            console.log('  - Tiene objeto global:', hasAppCreatorGlobal);
+            console.log('  - Resultado final:', detected ? '✅ EN AppCreator24' : '❌ FUERA de AppCreator24');
+            
+            return detected;
+        }
         
         // ============================================
         // FUNCIONES DE UTILIDAD
@@ -695,6 +761,7 @@
             // Ocultar resultados
             successResult.style.display = 'none';
             errorResult.style.display = 'none';
+            instructionsContainer.style.display = 'none';
             
             if (type === 'success') {
                 successTitle.textContent = title;
@@ -714,7 +781,7 @@
                 successResult.style.animation = 'fadeIn 0.5s ease';
                 
             } else {
-                // ERROR - NO mostrar countdown
+                // ERROR
                 errorTitle.textContent = title;
                 errorMessage.textContent = message;
                 errorResult.style.display = 'block';
@@ -728,27 +795,86 @@
             }, 100);
         }
         
-        // Redirigir a AppCreator24 - ENLACE INTERNO go:premiumpro
+        // Redirigir inteligentemente según el entorno
         function redirectToAppCreator(code) {
-            // URL para redirección interna de AppCreator24
-            const appCreatorUrl = `${APP_CREATOR_INTERNAL_LINK}?code=${encodeURIComponent(code)}&activated=true&timestamp=${Date.now()}&source=verify_system`;
-            
-            // Efecto visual antes de redirigir
-            document.body.style.opacity = '0.7';
-            document.body.style.transition = 'opacity 0.5s ease';
-            
-            // Mostrar en consola para debug
-            console.log('🔗 Redirigiendo a enlace interno:', appCreatorUrl);
-            console.log('ℹ️ Este enlace abrirá la sección "premiumpro" dentro de AppCreator24');
-            
-            // Redirigir usando el esquema especial de AppCreator24
-            setTimeout(() => {
-                window.location.href = appCreatorUrl;
-            }, 500);
+            if (isInAppCreator) {
+                // DENTRO DE APPCREATOR24: usar enlace interno
+                const internalUrl = `${APP_CREATOR_INTERNAL_LINK}?code=${encodeURIComponent(code)}&activated=true&timestamp=${Date.now()}`;
+                console.log('🔗 Redirigiendo a enlace interno AppCreator24:', internalUrl);
+                
+                // Intentar redirigir
+                try {
+                    window.location.href = internalUrl;
+                } catch (error) {
+                    console.error('❌ Error al redirigir:', error);
+                    showInstructionsForBrowser(code);
+                }
+                
+            } else {
+                // FUERA DE APPCREATOR24: mostrar instrucciones
+                showInstructionsForBrowser(code);
+            }
         }
         
-        // Iniciar countdown futurista
-        function startCountdown(seconds, code) {
+        // Mostrar instrucciones para navegador normal
+        function showInstructionsForBrowser(code) {
+            const instructionsHtml = `
+                <h4 style="color: #3b82f6; margin-bottom: 15px;">
+                    <i class="fas fa-info-circle"></i> Instrucciones para acceder al contenido premium
+                </h4>
+                <div style="color: #cbd5e1; line-height: 1.6;">
+                    <p><strong>✅ Tu código ha sido activado exitosamente:</strong></p>
+                    <div class="detail-item">
+                        <span class="detail-label">Código:</span>
+                        <span class="detail-value" style="font-family: 'Courier New';">${code}</span>
+                    </div>
+                    
+                    <p style="margin-top: 20px;"><strong>📱 Para acceder al contenido premium:</strong></p>
+                    <ol style="margin: 15px 0; padding-left: 20px;">
+                        <li>Abre la aplicación <strong>AppCreator24</strong> en tu dispositivo</li>
+                        <li>Busca la sección llamada <strong>"premiumpro"</strong></li>
+                        <li>Tu acceso premium estará automáticamente disponible</li>
+                        <li>Disfruta de todo el contenido exclusivo por 1 año</li>
+                    </ol>
+                    
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #10b981;">
+                        <p style="color: #10b981; margin-bottom: 10px;">
+                            <i class="fas fa-check-circle"></i> <strong>El código ${code} ya está registrado en nuestro sistema</strong>
+                        </p>
+                        <p style="color: #cbd5e1; font-size: 14px;">
+                            No necesitas volver a introducirlo. Solo abre AppCreator24 y accede a la sección premiumpro.
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            instructionsContainer.innerHTML = instructionsHtml;
+            instructionsContainer.style.display = 'block';
+            
+            // Cambiar texto del botón
+            redirectBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Abrir AppCreator24 (si está instalada)';
+            redirectBtn.onclick = () => {
+                // Intentar abrir la app con deep link
+                const deepLink = `ac24://open3087752-xgc1fy/premiumpro?code=${encodeURIComponent(code)}`;
+                window.location.href = deepLink;
+                
+                // Si después de 1 segundo no se abrió, mostrar mensaje
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        alert('Si no tienes AppCreator24 instalada, descárgala y busca la sección "premiumpro".\n\nTu código ya está activado: ' + code);
+                    }
+                }, 1000);
+            };
+        }
+        
+        // Iniciar countdown solo si está en AppCreator24
+        function startCountdownIfInAppCreator(seconds, code) {
+            if (!isInAppCreator) {
+                console.log('ℹ️ No está en AppCreator24, no se inicia countdown');
+                showInstructionsForBrowser(code);
+                return;
+            }
+            
             currentCode = code;
             countdownContainer.style.display = 'block';
             let remaining = seconds;
@@ -797,7 +923,7 @@
         async function copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
-                showAlert('success', '✅ Información copiada');
+                showAlert('success', '✅ Información copiada al portapapeles');
             } catch (err) {
                 // Fallback
                 const textArea = document.createElement('textarea');
@@ -899,7 +1025,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // ÉXITO: Mostrar detalles y iniciar countdown
+                    // ÉXITO: Mostrar detalles
                     const details = formatDetails(result.data);
                     
                     showResult('success',
@@ -918,8 +1044,10 @@ Fecha: ${result.data?.fecha_activacion || new Date().toLocaleString('es-CU')}
 Vigencia: ${result.data?.vigencia || '1 año'}
 Teléfono: ${result.data?.telefono || 'No registrado'}
 ──────────────────────────────
-¡Disfruta de tu acceso premium en AppCreator24!
-Sección: premiumpro
+Para acceder al contenido premium:
+1. Abre AppCreator24
+2. Ve a la sección "premiumpro"
+3. Tu acceso estará disponible automáticamente
                     `.trim();
                     
                     copySuccessBtn.onclick = () => copyToClipboard(copyText);
@@ -927,16 +1055,16 @@ Sección: premiumpro
                     // Configurar botón de redirección
                     redirectBtn.onclick = () => redirectToAppCreator(code);
                     
-                    // Iniciar countdown AUTOMÁTICO
+                    // Iniciar countdown SOLO si está en AppCreator24
                     setTimeout(() => {
-                        startCountdown(COUNTDOWN_SECONDS, code);
+                        startCountdownIfInAppCreator(COUNTDOWN_SECONDS, code);
                     }, 1000);
                     
                     // Limpiar input
                     codeInput.value = '';
                     
                 } else {
-                    // ERROR: No iniciar countdown
+                    // ERROR
                     showResult('error',
                         'Código no válido',
                         result.message || 'El código no pudo ser verificado.'
@@ -970,6 +1098,7 @@ Sección: premiumpro
             codeInput.focus();
             successResult.style.display = 'none';
             errorResult.style.display = 'none';
+            instructionsContainer.style.display = 'none';
             if (countdownInterval) {
                 clearInterval(countdownInterval);
                 countdownContainer.style.display = 'none';
@@ -993,6 +1122,7 @@ Sección: premiumpro
             if (value.length > 0) {
                 successResult.style.display = 'none';
                 errorResult.style.display = 'none';
+                instructionsContainer.style.display = 'none';
                 if (countdownInterval) {
                     clearInterval(countdownInterval);
                     countdownContainer.style.display = 'none';
@@ -1005,6 +1135,20 @@ Sección: premiumpro
         // ============================================
         
         window.addEventListener('load', () => {
+            // Detectar entorno al cargar
+            isInAppCreator = detectAppCreatorEnvironment();
+            
+            console.log('%c🔍 DETECCIÓN DE ENTORNO', 'color: #7c3aed; font-size: 16px; font-weight: bold;');
+            console.log('Está en AppCreator24:', isInAppCreator ? '✅ SÍ' : '❌ NO');
+            console.log('User Agent:', navigator.userAgent);
+            
+            // Mostrar mensaje según el entorno
+            if (isInAppCreator) {
+                console.log('ℹ️ Modo: Dentro de AppCreator24 - Se usará go:premiumpro');
+            } else {
+                console.log('ℹ️ Modo: Navegador normal - Se mostrarán instrucciones');
+            }
+            
             codeInput.focus();
             
             // Verificar código desde URL
@@ -1023,10 +1167,6 @@ Sección: premiumpro
             enumerable: false,
             configurable: false
         });
-        
-        // Mensaje de consola
-        console.log('%c🔑 VERIFY.HTML - SISTEMA PREMIUM', 'color: #7c3aed; font-size: 16px; font-weight: bold;');
-        console.log('%cEnlace interno configurado: go:premiumpro', 'color: #10b981;');
         
     </script>
 </body>
