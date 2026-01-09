@@ -561,9 +561,6 @@
                     <button id="redirectBtn" class="btn btn-primary" style="margin-top: 10px;">
                         <i class="fas fa-external-link-alt"></i> Ir a AppCreator24 Ahora
                     </button>
-                    <button id="openInAppBtn" class="btn btn-outline" style="margin-top: 10px; background: rgba(124, 58, 237, 0.1); border-color: #7c3aed; color: #a855f7;">
-                        <i class="fas fa-mobile-alt"></i> Abrir en App (si está instalada)
-                    </button>
                 </div>
             </div>
             
@@ -637,9 +634,8 @@
         // URL de tu API (NO VISIBLE PARA USUARIOS)
         const API_URL = 'https://script.google.com/macros/s/AKfycbxazYQ1ZQUZNZ2WWR73W6gL_hn54KX7ptt0WuWpHoG8du-ake24aU4HUe3irv-Efjs1AA/exec';
         
-        // Configuración de redirección
-        const APP_CREATOR_WEB_URL = 'https://appcreator24.com/?go=premium';
-        const APP_CREATOR_DEEP_LINK = 'ac24://open3087752-xgc1fy/premium';
+        // Configuración de redirección INTERNA de AppCreator24
+        const APP_CREATOR_INTERNAL_LINK = 'go:premiumpro';
         const COUNTDOWN_SECONDS = 5;
         
         // Variables de estado
@@ -665,7 +661,6 @@
         const errorMessage = document.getElementById('errorMessage');
         const copySuccessBtn = document.getElementById('copySuccessBtn');
         const redirectBtn = document.getElementById('redirectBtn');
-        const openInAppBtn = document.getElementById('openInAppBtn');
         
         const countdownContainer = document.getElementById('countdownContainer');
         const countdownNumber = document.getElementById('countdownNumber');
@@ -733,35 +728,23 @@
             }, 100);
         }
         
-        // Redirigir a AppCreator24 (VERSIÓN MEJORADA)
-        function redirectToAppCreator(code, useDeepLink = false) {
-            if (useDeepLink) {
-                // Usar deep link para abrir la app
-                const deepLinkUrl = `${APP_CREATOR_DEEP_LINK}?code=${encodeURIComponent(code)}`;
-                
-                // Intentar abrir la app
-                window.location.href = deepLinkUrl;
-                
-                // Si después de 1 segundo no se abrió la app, abrir en web
-                setTimeout(() => {
-                    if (!document.hidden) {
-                        const webUrl = `${APP_CREATOR_WEB_URL}&code=${encodeURIComponent(code)}&premium=true`;
-                        window.location.href = webUrl;
-                    }
-                }, 1000);
-                
-            } else {
-                // Usar enlace web normal
-                const webUrl = `${APP_CREATOR_WEB_URL}&code=${encodeURIComponent(code)}&premium=true`;
-                
-                // Efecto visual
-                document.body.style.opacity = '0.7';
-                document.body.style.transition = 'opacity 0.5s ease';
-                
-                setTimeout(() => {
-                    window.location.href = webUrl;
-                }, 500);
-            }
+        // Redirigir a AppCreator24 - ENLACE INTERNO go:premiumpro
+        function redirectToAppCreator(code) {
+            // URL para redirección interna de AppCreator24
+            const appCreatorUrl = `${APP_CREATOR_INTERNAL_LINK}?code=${encodeURIComponent(code)}&activated=true&timestamp=${Date.now()}&source=verify_system`;
+            
+            // Efecto visual antes de redirigir
+            document.body.style.opacity = '0.7';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            // Mostrar en consola para debug
+            console.log('🔗 Redirigiendo a enlace interno:', appCreatorUrl);
+            console.log('ℹ️ Este enlace abrirá la sección "premiumpro" dentro de AppCreator24');
+            
+            // Redirigir usando el esquema especial de AppCreator24
+            setTimeout(() => {
+                window.location.href = appCreatorUrl;
+            }, 500);
         }
         
         // Iniciar countdown futurista
@@ -805,7 +788,7 @@
                 // Cuando llegue a 0
                 if (remaining <= 0) {
                     clearInterval(countdownInterval);
-                    redirectToAppCreator(code, false); // Usar web por defecto
+                    redirectToAppCreator(code);
                 }
             }, 1000);
         }
@@ -936,17 +919,15 @@ Vigencia: ${result.data?.vigencia || '1 año'}
 Teléfono: ${result.data?.telefono || 'No registrado'}
 ──────────────────────────────
 ¡Disfruta de tu acceso premium en AppCreator24!
+Sección: premiumpro
                     `.trim();
                     
                     copySuccessBtn.onclick = () => copyToClipboard(copyText);
                     
-                    // Configurar botón de redirección web
-                    redirectBtn.onclick = () => redirectToAppCreator(code, false);
+                    // Configurar botón de redirección
+                    redirectBtn.onclick = () => redirectToAppCreator(code);
                     
-                    // Configurar botón para abrir en app
-                    openInAppBtn.onclick = () => redirectToAppCreator(code, true);
-                    
-                    // Iniciar countdown AUTOMÁTICO (redirección web)
+                    // Iniciar countdown AUTOMÁTICO
                     setTimeout(() => {
                         startCountdown(COUNTDOWN_SECONDS, code);
                     }, 1000);
@@ -1042,6 +1023,10 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
             enumerable: false,
             configurable: false
         });
+        
+        // Mensaje de consola
+        console.log('%c🔑 VERIFY.HTML - SISTEMA PREMIUM', 'color: #7c3aed; font-size: 16px; font-weight: bold;');
+        console.log('%cEnlace interno configurado: go:premiumpro', 'color: #10b981;');
         
     </script>
 </body>
