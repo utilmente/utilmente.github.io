@@ -159,7 +159,7 @@
             color: var(--light);
             font-size: 18px;
             font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-align: center;
             text-transform: uppercase;
             transition: var(--transition);
@@ -300,6 +300,63 @@
             font-weight: 600;
         }
         
+        /* Contador futurista */
+        .countdown-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(16, 185, 129, 0.1));
+            border-radius: 12px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        
+        .countdown-title {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+        
+        .countdown-display {
+            font-size: 48px;
+            font-weight: 800;
+            color: #7c3aed;
+            text-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .countdown-display::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #7c3aed, transparent);
+            bottom: -5px;
+            left: 0;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .countdown-text {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 10px;
+        }
+        
         /* Información */
         .info-box {
             background: rgba(17, 24, 39, 0.7);
@@ -401,6 +458,10 @@
                 font-size: 16px;
                 padding: 15px;
             }
+            
+            .countdown-display {
+                font-size: 36px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -452,13 +513,13 @@
             <!-- Formulario -->
             <div class="form-group">
                 <label class="form-label">
-                    <i class="fas fa-lock"></i> Código Premium (12 caracteres)
+                    <i class="fas fa-lock"></i> Código Premium
                 </label>
                 <input type="text" id="codeInput" class="code-input" 
-                       placeholder="Ej: PRE-MK6I-XH0VHF" maxlength="14"
+                       placeholder="Ej: PRE-MK6M-L4MRLU" maxlength="17"
                        autocomplete="off" autofocus>
                 <small style="color: #94a3b8; display: block; margin-top: 8px;">
-                    Formato: PRE-XXXX-YYYY (sin espacios adicionales)
+                    Formato: PRE-XXXX-XXXXXX (17 caracteres, mayúsculas)
                 </small>
             </div>
             
@@ -482,13 +543,28 @@
                 <h3 class="result-title" id="successTitle">¡Acceso Premium Activado!</h3>
                 <p class="result-message" id="successMessage"></p>
                 
+                <!-- Contador futurista -->
+                <div id="countdownContainer" class="countdown-container" style="display: none;">
+                    <div class="countdown-title">Redirección automática a</div>
+                    <div class="countdown-display" id="countdownNumber">5</div>
+                    <div class="countdown-text">Sección Premium de AppCreator24</div>
+                </div>
+                
                 <div class="result-details" id="successDetails">
                     <!-- Los detalles se llenan por JavaScript -->
                 </div>
                 
-                <button id="copySuccessBtn" class="btn btn-secondary" style="margin-top: 20px;">
-                    <i class="far fa-copy"></i> Copiar Información
-                </button>
+                <div id="successButtons" style="margin-top: 20px;">
+                    <button id="copySuccessBtn" class="btn btn-secondary">
+                        <i class="far fa-copy"></i> Copiar Información
+                    </button>
+                    <button id="redirectBtn" class="btn btn-primary" style="margin-top: 10px;">
+                        <i class="fas fa-external-link-alt"></i> Ir a AppCreator24 Ahora
+                    </button>
+                    <button id="openInAppBtn" class="btn btn-outline" style="margin-top: 10px; background: rgba(124, 58, 237, 0.1); border-color: #7c3aed; color: #a855f7;">
+                        <i class="fas fa-mobile-alt"></i> Abrir en App (si está instalada)
+                    </button>
+                </div>
             </div>
             
             <!-- Resultado de error -->
@@ -555,11 +631,20 @@
 
     <script>
         // ============================================
-        // CONFIGURACIÓN
+        // CONFIGURACIÓN SEGURA
         // ============================================
         
-        // TU URL DE API - REEMPLAZA ESTA PARTE
+        // URL de tu API (NO VISIBLE PARA USUARIOS)
         const API_URL = 'https://script.google.com/macros/s/AKfycbxazYQ1ZQUZNZ2WWR73W6gL_hn54KX7ptt0WuWpHoG8du-ake24aU4HUe3irv-Efjs1AA/exec';
+        
+        // Configuración de redirección
+        const APP_CREATOR_WEB_URL = 'https://appcreator24.com/?go=premium';
+        const APP_CREATOR_DEEP_LINK = 'ac24://open3087752-xgc1fy/premium';
+        const COUNTDOWN_SECONDS = 5;
+        
+        // Variables de estado
+        let countdownInterval = null;
+        let currentCode = '';
         
         // ============================================
         // ELEMENTOS DEL DOM
@@ -575,29 +660,44 @@
         const successTitle = document.getElementById('successTitle');
         const successMessage = document.getElementById('successMessage');
         const successDetails = document.getElementById('successDetails');
+        const successButtons = document.getElementById('successButtons');
         const errorTitle = document.getElementById('errorTitle');
         const errorMessage = document.getElementById('errorMessage');
         const copySuccessBtn = document.getElementById('copySuccessBtn');
+        const redirectBtn = document.getElementById('redirectBtn');
+        const openInAppBtn = document.getElementById('openInAppBtn');
+        
+        const countdownContainer = document.getElementById('countdownContainer');
+        const countdownNumber = document.getElementById('countdownNumber');
         
         // ============================================
         // FUNCIONES DE UTILIDAD
         // ============================================
         
-        // Formatear código (mayúsculas, sin espacios)
+        // Formatear código
         function formatCode(code) {
-            return code.trim().toUpperCase().replace(/\s+/g, '');
+            return code.trim().toUpperCase()
+                .replace(/\s+/g, '')
+                .replace(/[^A-Z0-9\-]/g, '');
         }
         
         // Validar formato de código
         function isValidCodeFormat(code) {
             const formatted = formatCode(code);
-            // Formato: PRE-XXXX-YYYY (12-14 caracteres)
-            return formatted.length >= 12 && formatted.length <= 14;
+            const pattern = /^PRE-[A-Z0-9]{4}-[A-Z0-9]{6,8}$/;
+            return pattern.test(formatted) && formatted.length >= 15 && formatted.length <= 17;
         }
         
         // Mostrar resultado
         function showResult(type, title, message, details = null) {
-            // Ocultar todos los resultados primero
+            // Detener cualquier countdown previo
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                countdownContainer.style.display = 'none';
+            }
+            
+            // Ocultar resultados
             successResult.style.display = 'none';
             errorResult.style.display = 'none';
             
@@ -612,39 +712,166 @@
                     successDetails.style.display = 'none';
                 }
                 
-                successResult.style.display = 'block';
+                // Mostrar botones
+                successButtons.style.display = 'block';
                 
-            } else if (type === 'error') {
+                successResult.style.display = 'block';
+                successResult.style.animation = 'fadeIn 0.5s ease';
+                
+            } else {
+                // ERROR - NO mostrar countdown
                 errorTitle.textContent = title;
                 errorMessage.textContent = message;
                 errorResult.style.display = 'block';
+                errorResult.style.animation = 'fadeIn 0.5s ease';
             }
             
-            // Desplazar para ver el resultado
-            successResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Desplazar suavemente
+            setTimeout(() => {
+                document.querySelector('.result-container[style*="display: block"]')
+                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
         }
         
-        // Copiar información al portapapeles
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Información copiada al portapapeles');
-            }).catch(err => {
-                console.error('Error al copiar:', err);
-                alert('❌ Error al copiar. Puedes seleccionar y copiar manualmente.');
-            });
+        // Redirigir a AppCreator24 (VERSIÓN MEJORADA)
+        function redirectToAppCreator(code, useDeepLink = false) {
+            if (useDeepLink) {
+                // Usar deep link para abrir la app
+                const deepLinkUrl = `${APP_CREATOR_DEEP_LINK}?code=${encodeURIComponent(code)}`;
+                
+                // Intentar abrir la app
+                window.location.href = deepLinkUrl;
+                
+                // Si después de 1 segundo no se abrió la app, abrir en web
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        const webUrl = `${APP_CREATOR_WEB_URL}&code=${encodeURIComponent(code)}&premium=true`;
+                        window.location.href = webUrl;
+                    }
+                }, 1000);
+                
+            } else {
+                // Usar enlace web normal
+                const webUrl = `${APP_CREATOR_WEB_URL}&code=${encodeURIComponent(code)}&premium=true`;
+                
+                // Efecto visual
+                document.body.style.opacity = '0.7';
+                document.body.style.transition = 'opacity 0.5s ease';
+                
+                setTimeout(() => {
+                    window.location.href = webUrl;
+                }, 500);
+            }
         }
         
-        // Formatear detalles para mostrar
+        // Iniciar countdown futurista
+        function startCountdown(seconds, code) {
+            currentCode = code;
+            countdownContainer.style.display = 'block';
+            let remaining = seconds;
+            
+            // Actualizar display inicial
+            countdownNumber.textContent = remaining;
+            countdownNumber.style.color = '#7c3aed';
+            
+            // Efecto de entrada
+            countdownContainer.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                countdownContainer.style.transform = 'scale(1)';
+                countdownContainer.style.transition = 'transform 0.3s ease';
+            }, 10);
+            
+            // Intervalo del countdown
+            countdownInterval = setInterval(() => {
+                remaining--;
+                
+                // Cambiar color según segundos restantes
+                if (remaining <= 2) {
+                    countdownNumber.style.color = '#ef4444';
+                    countdownNumber.style.textShadow = '0 0 15px rgba(239, 68, 68, 0.7)';
+                } else if (remaining <= 3) {
+                    countdownNumber.style.color = '#f59e0b';
+                    countdownNumber.style.textShadow = '0 0 15px rgba(245, 158, 11, 0.7)';
+                }
+                
+                // Efecto de latido
+                countdownNumber.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    countdownNumber.style.transform = 'scale(1)';
+                }, 200);
+                
+                countdownNumber.textContent = remaining;
+                
+                // Cuando llegue a 0
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    redirectToAppCreator(code, false); // Usar web por defecto
+                }
+            }, 1000);
+        }
+        
+        // Copiar información
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showAlert('success', '✅ Información copiada');
+            } catch (err) {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showAlert('success', '✅ Información copiada');
+            }
+        }
+        
+        // Mostrar alerta
+        function showAlert(type, message) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i> ${message}`;
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                padding: 15px 25px;
+                border-radius: 12px;
+                animation: fadeIn 0.3s ease;
+                background: ${type === 'success' ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)'};
+                color: white;
+                border: none;
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                alert.style.transform = 'translateY(-10px)';
+                setTimeout(() => document.body.removeChild(alert), 300);
+            }, 3000);
+        }
+        
+        // Formatear detalles
         function formatDetails(data) {
-            if (!data) return '';
+            if (!data || typeof data !== 'object') return '';
             
             let html = '';
-            for (const [key, value] of Object.entries(data)) {
-                const label = key.replace(/_/g, ' ');
-                const formattedKey = label.charAt(0).toUpperCase() + label.slice(1);
+            const details = {
+                'Código': data.codigo || 'N/A',
+                'Estado': data.estado || 'N/A',
+                'Fecha de Activación': data.fecha_activacion || new Date().toLocaleString('es-CU'),
+                'Vigencia': data.vigencia || '1 año',
+                'Teléfono': data.telefono || 'No registrado',
+                'Email': data.email || 'No registrado'
+            };
+            
+            for (const [key, value] of Object.entries(details)) {
                 html += `
                     <div class="detail-item">
-                        <span class="detail-label">${formattedKey}:</span>
+                        <span class="detail-label">${key}:</span>
                         <span class="detail-value">${value}</span>
                     </div>
                 `;
@@ -653,39 +880,43 @@
         }
         
         // ============================================
-        // FUNCIÓN PARA VERIFICAR CÓDIGO
+        // FUNCIÓN PRINCIPAL
         // ============================================
         
         async function verifyCode() {
             const rawCode = codeInput.value;
             
-            // Validar formato
-            if (!rawCode || !isValidCodeFormat(rawCode)) {
-                showResult('error', 
-                    'Formato incorrecto',
-                    'El código debe tener el formato: PRE-XXXX-YYYY (12-14 caracteres). Verifica que lo hayas copiado correctamente.'
-                );
+            if (!rawCode || rawCode.trim() === '') {
+                showResult('error', 'Campo vacío', 'Por favor, ingresa tu código premium.');
                 return;
             }
             
             const code = formatCode(rawCode);
+            if (!isValidCodeFormat(code)) {
+                showResult('error', 
+                    'Formato incorrecto',
+                    'El código debe tener el formato: PRE-XXXX-XXXXXX (ej: PRE-MK6M-L4MRLU).'
+                );
+                return;
+            }
             
-            // Mostrar loading
+            // Loading
             verifyBtn.style.display = 'none';
             loadingBtn.style.display = 'flex';
             
             try {
-                // Llamar a la API
-                const response = await fetch(`${API_URL}?action=verify_code&code=${encodeURIComponent(code)}`);
+                const response = await fetch(`${API_URL}?action=verify_code&code=${encodeURIComponent(code)}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Accept': 'application/json' }
+                });
                 
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Éxito - código válido
+                    // ÉXITO: Mostrar detalles y iniciar countdown
                     const details = formatDetails(result.data);
                     
                     showResult('success',
@@ -694,43 +925,50 @@
                         details
                     );
                     
-                    // Limpiar input después de éxito
-                    codeInput.value = '';
-                    
-                    // Preparar texto para copiar
+                    // Configurar botón de copiar
                     const copyText = `
 ✅ CÓDIGO ACTIVADO EXITOSAMENTE
-------------------------------
+──────────────────────────────
 Código: ${result.data?.codigo || code}
 Estado: ${result.data?.estado || 'ACTIVADO'}
 Fecha: ${result.data?.fecha_activacion || new Date().toLocaleString('es-CU')}
 Vigencia: ${result.data?.vigencia || '1 año'}
 Teléfono: ${result.data?.telefono || 'No registrado'}
-------------------------------
-¡Disfruta de tu acceso premium!
-                    `;
+──────────────────────────────
+¡Disfruta de tu acceso premium en AppCreator24!
+                    `.trim();
                     
-                    // Configurar botón de copiar
                     copySuccessBtn.onclick = () => copyToClipboard(copyText);
                     
+                    // Configurar botón de redirección web
+                    redirectBtn.onclick = () => redirectToAppCreator(code, false);
+                    
+                    // Configurar botón para abrir en app
+                    openInAppBtn.onclick = () => redirectToAppCreator(code, true);
+                    
+                    // Iniciar countdown AUTOMÁTICO (redirección web)
+                    setTimeout(() => {
+                        startCountdown(COUNTDOWN_SECONDS, code);
+                    }, 1000);
+                    
+                    // Limpiar input
+                    codeInput.value = '';
+                    
                 } else {
-                    // Error - código no válido
+                    // ERROR: No iniciar countdown
                     showResult('error',
                         'Código no válido',
-                        result.message || 'El código no pudo ser verificado. Intenta nuevamente.'
+                        result.message || 'El código no pudo ser verificado.'
                     );
                 }
                 
             } catch (error) {
-                console.error('Error al verificar código:', error);
-                
                 showResult('error',
                     'Error de conexión',
-                    'No se pudo conectar con el servidor. Verifica tu conexión a internet e intenta nuevamente.'
+                    'No se pudo verificar el código. Intenta nuevamente.'
                 );
                 
             } finally {
-                // Restaurar botón
                 verifyBtn.style.display = 'flex';
                 loadingBtn.style.display = 'none';
             }
@@ -740,29 +978,27 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
         // EVENT LISTENERS
         // ============================================
         
-        // Verificar código al hacer clic
         verifyBtn.addEventListener('click', verifyCode);
         
-        // Verificar código al presionar Enter
         codeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                verifyCode();
-            }
+            if (e.key === 'Enter') verifyCode();
         });
         
-        // Limpiar formulario
         clearBtn.addEventListener('click', () => {
             codeInput.value = '';
             codeInput.focus();
             successResult.style.display = 'none';
             errorResult.style.display = 'none';
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownContainer.style.display = 'none';
+            }
         });
         
-        // Autoformatear código mientras se escribe
+        // Autoformatear
         codeInput.addEventListener('input', function() {
             let value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
             
-            // Autoinsertar guiones en formato PRE-XXXX-YYYY
             if (value.length > 3 && value[3] !== '-') {
                 value = value.slice(0, 3) + '-' + value.slice(3);
             }
@@ -770,25 +1006,16 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
                 value = value.slice(0, 8) + '-' + value.slice(8);
             }
             
-            // Limitar longitud
-            if (value.length > 14) {
-                value = value.slice(0, 14);
-            }
-            
+            if (value.length > 17) value = value.slice(0, 17);
             this.value = value;
-        });
-        
-        // Probar conexión API al cargar la página
-        window.addEventListener('load', async () => {
-            try {
-                const testResponse = await fetch(`${API_URL}?action=test`);
-                const testResult = await testResponse.json();
-                
-                if (!testResult.success) {
-                    console.warn('API test falló:', testResult.message);
+            
+            if (value.length > 0) {
+                successResult.style.display = 'none';
+                errorResult.style.display = 'none';
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownContainer.style.display = 'none';
                 }
-            } catch (error) {
-                console.log('Test de conexión falló (puede ser normal durante desarrollo)');
             }
         });
         
@@ -796,18 +1023,26 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
         // INICIALIZACIÓN
         // ============================================
         
-        // Enfocar el input al cargar
-        codeInput.focus();
+        window.addEventListener('load', () => {
+            codeInput.focus();
+            
+            // Verificar código desde URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const codeFromUrl = urlParams.get('code');
+            if (codeFromUrl) {
+                codeInput.value = formatCode(codeFromUrl);
+                setTimeout(() => verifyCode(), 1000);
+            }
+        });
         
-        // Verificar si hay código en la URL (para deep linking)
-        const urlParams = new URLSearchParams(window.location.search);
-        const codeFromUrl = urlParams.get('code');
-        if (codeFromUrl) {
-            codeInput.value = formatCode(codeFromUrl);
-            setTimeout(() => {
-                verifyCode();
-            }, 500);
-        }
+        // Ocultar API URL de la consola
+        Object.defineProperty(window, 'API_URL', {
+            value: API_URL,
+            writable: false,
+            enumerable: false,
+            configurable: false
+        });
+        
     </script>
 </body>
 </html>
