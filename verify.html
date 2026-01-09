@@ -809,30 +809,19 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
             }, 500);
         }
     </script>
-    <!-- Sección 3: Acciones rápidas -->
-<div class="section">
-    <h3 class="section-title">
-        <i class="fas fa-bolt"></i> Acciones Rápidas
-    </h3>
-    
-    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-        <button id="refreshBtn" class="btn btn-outline">
-            <i class="fas fa-sync-alt"></i> Actualizar Datos
-        </button>
-        
-        <button id="testApiBtn" class="btn btn-outline">
-            <i class="fas fa-wifi"></i> Probar Conexión API
-        </button>
-        
-        <button id="viewGoogleSheetBtn" class="btn btn-outline">
-            <i class="fas fa-table"></i> Ver Google Sheet
-        </button>
-        
-        <!-- AÑADE ESTE BOTÓN NUEVO -->
-        <a href="verify.html" target="_blank" class="btn btn-outline" style="text-decoration: none;">
-            <i class="fas fa-external-link-alt"></i> Ir a Verificar Códigos
-        </a>
-    </div>
+<!-- Botón flotante para verificar códigos -->
+<div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <a href="verify.html" target="_blank" 
+       style="display: flex; align-items: center; justify-content: center;
+              width: 60px; height: 60px; background: linear-gradient(135deg, #7c3aed, #a855f7);
+              color: white; border-radius: 50%; text-decoration: none;
+              box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
+              transition: all 0.3s ease; font-size: 24px;"
+       onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 20px rgba(124, 58, 237, 0.6)';"
+       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 15px rgba(124, 58, 237, 0.4)';"
+       title="Ir a página de verificación de códigos">
+        <i class="fas fa-key"></i>
+    </a>
 </div>
 </body>
 </html>
