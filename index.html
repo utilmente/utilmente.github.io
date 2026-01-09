@@ -557,5 +557,16 @@
             }
         });
     </script>
+    <!-- Enlace al panel admin (oculto para usuarios normales) -->
+<div style="position: fixed; bottom: 20px; right: 20px;">
+    <a href="admin.html" 
+       style="background: #333; color: white; padding: 10px 15px; 
+              border-radius: 50px; text-decoration: none; font-size: 12px;
+              opacity: 0.3; transition: opacity 0.3s;"
+       onmouseover="this.style.opacity='1'"
+       onmouseout="this.style.opacity='0.3'">
+        <i class="fas fa-user-shield"></i> Admin
+    </a>
+</div>
 </body>
 </html>
