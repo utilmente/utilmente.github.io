@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Pago Premium - Sistema de Acceso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables y reset */
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #5b21b6;
+            --secondary: #f59e0b;
+            --secondary-dark: #d97706;
+            --success: #10b981;
+            --success-dark: #059669;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --dark: #1f2937;
+            --darker: #111827;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+            --border-radius: 16px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, #2d1b69 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(to right, #a855f7, var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .tagline {
+            font-size: 18px;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #94a3b8;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            line-height: 1.5;
+        }
+        
+        /* Tarjeta del formulario */
+        .form-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #fbbf24;
+        }
+        
+        /* Formulario */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(17, 24, 39, 0.7);
+            border: 2px solid #4b5563;
+            border-radius: 12px;
+            color: var(--light);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+        }
+        
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+        
+        .required {
+            color: #f87171;
+        }
+        
+        /* Botón */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: var(--darker);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        /* Mensajes */
+        .message {
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #a7f3d0;
+        }
+        
+        .message-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        
+        /* Información */
+        .info-box {
+            background: rgba(17, 24, 39, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .info-title {
+            color: #a855f7;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-content {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        
+        .info-content ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .info-content li {
+            margin-bottom: 8px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #94a3b8;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+        
+        .contact-info {
+            margin-top: 15px;
+            color: #a5b4fc;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-card {
+                padding: 20px;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .form-title {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .logo {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--light);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <div class="logo-text">VERIFICAR PAGO</div>
+            </div>
+            <h1 class="tagline">Confirmación de Transferencia Premium</h1>
+            <p class="subtitle">Completa este formulario después de realizar tu transferencia para activar tu acceso premium</p>
+        </div>
+        
+        <!-- Tarjeta del formulario -->
+        <div class="form-card">
+            <h2 class="form-title">
+                <i class="fas fa-file-invoice-dollar"></i> Datos de tu Transferencia
+            </h2>
+            
+            <!-- Mensajes de éxito/error -->
+            <div id="messageSuccess" class="message message-success">
+                <i class="fas fa-check-circle"></i> <span id="successText"></span>
+            </div>
+            
+            <div id="messageError" class="message message-error">
+                <i class="fas fa-exclamation-circle"></i> <span id="errorText"></span>
+            </div>
+            
+            <!-- Formulario -->
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i> Nombre completo <span class="required">*</span>
+                    </label>
+                    <input type="text" id="nombre" class="form-input" placeholder="Ej: Juan Pérez Rodríguez" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-phone"></i> Número de teléfono <span class="required">*</span>
+                    </label>
+                    <input type="tel" id="telefono" class="form-input" placeholder="Ej: 5351234567" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-money-bill-wave"></i> Monto transferido (CUP) <span class="required">*</span>
+                    </label>
+                    <select id="monto" class="form-input" required>
+                        <option value="" disabled selected>Selecciona el monto</option>
+                        <option value="50">50 CUP (Pago con saldo)</option>
+                        <option value="80">80 CUP (Transferencia a tarjeta)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-hashtag"></i> Código de transferencia <span class="required">*</span>
+                    </label>
+                    <input type="text" id="codigo_transferencia" class="form-input" 
+                           placeholder="Ej: TRF-2025-001 o número de comprobante" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i> Correo electrónico <span class="required">*</span>
+                    </label>
+                    <input type="email" id="email" class="form-input" 
+                           placeholder="ejemplo@gmail.com (recibirás el código aquí)" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-comment"></i> Observaciones (opcional)
+                    </label>
+                    <textarea id="observaciones" class="form-input" rows="3" 
+                              placeholder="Detalles adicionales sobre tu transferencia..."></textarea>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Enviar verificación
+                </button>
+                
+                <div id="loading" class="btn btn-primary" style="display: none;">
+                    <div class="spinner"></div> Procesando solicitud...
+                </div>
+            </form>
+            
+            <!-- Información importante -->
+            <div class="info-box">
+                <h3 class="info-title">
+                    <i class="fas fa-info-circle"></i> Instrucciones importantes
+                </h3>
+                <div class="info-content">
+                    <p>Después de enviar este formulario:</p>
+                    <ul>
+                        <li>Verificaremos tu transferencia en un plazo de <strong>24-48 horas</strong></li>
+                        <li>Recibirás tu código premium en el email proporcionado</li>
+                        <li>El código será válido por <strong>72 horas</strong> para canjearlo</li>
+                        <li>El acceso premium tendrá validez de <strong>1 año completo</strong></li>
+                    </ul>
+                    <p>Si tienes dudas, contacta: <strong>Josueperez991022@gmail.com</strong></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>Sistema de Verificación Premium © 2025</p>
+            <p class="contact-info">
+                <i class="fas fa-envelope"></i> Contacto: Josueperez991022@gmail.com |
+                <i class="fas fa-clock"></i> Tiempo de respuesta: 24-48 horas
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // TU URL DE API - REEMPLAZA ESTA PARTE
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxazYQ1ZQUZNZ2WWR73W6gL_hn54KX7ptt0WuWpHoG8du-ake24aU4HUe3irv-Efjs1AA/exec';
+        // ↑↑↑↑↑↑↑↑↑↑↑ REEMPLAZA ESTO CON TU URL REAL ↑↑↑↑↑↑↑↑↑↑↑
+        
+        // Elementos del DOM
+        const form = document.getElementById('paymentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const messageSuccess = document.getElementById('messageSuccess');
+        const messageError = document.getElementById('messageError');
+        const successText = document.getElementById('successText');
+        const errorText = document.getElementById('errorText');
+        
+        // Mostrar mensaje
+        function showMessage(type, text) {
+            // Ocultar todos los mensajes primero
+            messageSuccess.style.display = 'none';
+            messageError.style.display = 'none';
+            
+            // Mostrar el mensaje correspondiente
+            if (type === 'success') {
+                successText.textContent = text;
+                messageSuccess.style.display = 'block';
+                
+                // Ocultar después de 10 segundos
+                setTimeout(() => {
+                    messageSuccess.style.display = 'none';
+                }, 10000);
+                
+            } else if (type === 'error') {
+                errorText.textContent = text;
+                messageError.style.display = 'block';
+                
+                // Ocultar después de 8 segundos
+                setTimeout(() => {
+                    messageError.style.display = 'none';
+                }, 8000);
+            }
+            
+            // Desplazar para ver el mensaje
+            messageSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Enviar formulario
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Evitar envío tradicional
+            
+            // Validar formulario
+            if (!form.checkValidity()) {
+                showMessage('error', 'Por favor, completa todos los campos requeridos');
+                return;
+            }
+            
+            // Mostrar loading y deshabilitar botón
+            submitBtn.style.display = 'none';
+            loading.style.display = 'flex';
+            
+            try {
+                // Obtener datos del formulario
+                const formData = {
+                    nombre: document.getElementById('nombre').value.trim(),
+                    telefono: document.getElementById('telefono').value.trim(),
+                    monto: document.getElementById('monto').value,
+                    codigo_transferencia: document.getElementById('codigo_transferencia').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    observaciones: document.getElementById('observaciones').value.trim(),
+                    action: 'submit_payment'
+                };
+                
+                // Enviar a la API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Éxito
+                    showMessage('success', result.message);
+                    
+                    // Mostrar información adicional
+                    const info = result.data;
+                    showMessage('success', 
+                        `${result.message} \n\nID de registro: ${info.registro_id}\nFecha: ${info.fecha_registro}\nEstado: ${info.estado}\n\n${info.siguiente_paso}`
+                    );
+                    
+                    // Limpiar formulario después de éxito
+                    form.reset();
+                    
+                } else {
+                    // Error
+                    showMessage('error', result.message || 'Error al procesar la solicitud');
+                }
+                
+            } catch (error) {
+                // Error de conexión
+                showMessage('error', 'Error de conexión. Verifica tu internet e intenta nuevamente.');
+                console.error('Error:', error);
+                
+            } finally {
+                // Restaurar botón
+                submitBtn.style.display = 'flex';
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Validación en tiempo real
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.style.borderColor = '#10b981';
+                } else {
+                    this.style.borderColor = '#ef4444';
+                }
+            });
+        });
+        
+        // Probar conexión con la API al cargar la página
+        window.addEventListener('load', async () => {
+            try {
+                const testResponse = await fetch(`${API_URL}?action=test`);
+                const testResult = await testResponse.json();
+                
+                if (!testResult.success) {
+                    showMessage('error', '⚠️ El sistema está en mantenimiento. Intenta más tarde.');
+                }
+            } catch (error) {
+                console.log('Test de conexión falló (puede ser normal)');
+            }
+        });
+    </script>
+</body>
+</html>
