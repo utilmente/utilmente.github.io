@@ -98,6 +98,135 @@
             line-height: 1.5;
         }
         
+        /* Botón Premium Activado (NUEVO) */
+        .premium-active-container {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(124, 58, 237, 0.2));
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            text-align: center;
+            animation: pulsePremium 2s infinite;
+            display: none;
+        }
+        
+        @keyframes pulsePremium {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        
+        .premium-badge i {
+            color: #10b981;
+        }
+        
+        .premium-badge-text {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .premium-active-title {
+            font-size: 22px;
+            color: #fbbf24;
+            margin-bottom: 10px;
+        }
+        
+        .premium-active-message {
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        
+        .btn-premium {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: var(--transition);
+            margin-bottom: 20px;
+        }
+        
+        .btn-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Contador de 365 días (NUEVO) */
+        .year-countdown {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        
+        .countdown-title {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        
+        .countdown-display-large {
+            font-size: 36px;
+            font-weight: 800;
+            color: #7c3aed;
+            text-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            margin: 5px 0;
+        }
+        
+        .countdown-subtitle {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin: 5px 0;
+        }
+        
+        .countdown-progress {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .countdown-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+            border-radius: 3px;
+            width: 100%;
+            transition: width 0.5s ease;
+        }
+        
+        .countdown-days {
+            font-size: 12px;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+        }
+        
         /* Tarjeta principal */
         .main-card {
             background: rgba(30, 41, 59, 0.8);
@@ -300,8 +429,8 @@
             font-weight: 600;
         }
         
-        /* Contador futurista */
-        .countdown-container {
+        /* Contador futurista (5 segundos) */
+        .short-countdown-container {
             text-align: center;
             margin: 20px 0;
             padding: 15px;
@@ -317,13 +446,7 @@
             100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
         
-        .countdown-title {
-            font-size: 16px;
-            color: #cbd5e1;
-            margin-bottom: 10px;
-        }
-        
-        .countdown-display {
+        .short-countdown-display {
             font-size: 48px;
             font-weight: 800;
             color: #7c3aed;
@@ -335,7 +458,7 @@
             display: inline-block;
         }
         
-        .countdown-display::after {
+        .short-countdown-display::after {
             content: '';
             position: absolute;
             width: 100%;
@@ -351,7 +474,7 @@
             100% { transform: translateX(100%); }
         }
         
-        .countdown-text {
+        .short-countdown-text {
             font-size: 14px;
             color: #94a3b8;
             margin-top: 10px;
@@ -459,8 +582,16 @@
                 padding: 15px;
             }
             
-            .countdown-display {
+            .short-countdown-display {
                 font-size: 36px;
+            }
+            
+            .premium-active-title {
+                font-size: 20px;
+            }
+            
+            .countdown-display-large {
+                font-size: 28px;
             }
         }
         
@@ -497,6 +628,38 @@
             </div>
             <h1 class="tagline">Activa tu Acceso Premium</h1>
             <p class="subtitle">Ingresa el código que recibiste por email para desbloquear todo el contenido premium por 1 año</p>
+        </div>
+        
+        <!-- Botón Premium Activado (NUEVO - se muestra si ya tiene premium) -->
+        <div id="premiumActiveContainer" class="premium-active-container">
+            <div class="premium-badge">
+                <i class="fas fa-crown"></i>
+                <span class="premium-badge-text">PREMIUM ACTIVADO</span>
+            </div>
+            <h2 class="premium-active-title">¡Tu acceso premium está activo!</h2>
+            <p class="premium-active-message">
+                Ya validaste tu código previamente. Haz clic en el botón para acceder al contenido premium.
+            </p>
+            
+            <button id="premiumActiveBtn" class="btn-premium">
+                <i class="fas fa-rocket"></i> IR A CONTENIDO PREMIUM
+            </button>
+            
+            <!-- Contador de 365 días (NUEVO) -->
+            <div class="year-countdown">
+                <div class="countdown-title">TIEMPO RESTANTE DE TU PREMIUM</div>
+                <div class="countdown-display-large" id="yearCountdownDisplay">365</div>
+                <div class="countdown-subtitle" id="countdownSubtitle">días restantes</div>
+                
+                <div class="countdown-progress">
+                    <div class="countdown-progress-bar" id="countdownProgressBar" style="width: 100%"></div>
+                </div>
+                
+                <div class="countdown-days">
+                    <span>Activado: <span id="activationDate">Hoy</span></span>
+                    <span>Expira: <span id="expiryDate">En 1 año</span></span>
+                </div>
+            </div>
         </div>
         
         <!-- Tarjeta principal -->
@@ -543,11 +706,11 @@
                 <h3 class="result-title" id="successTitle">¡Acceso Premium Activado!</h3>
                 <p class="result-message" id="successMessage"></p>
                 
-                <!-- Contador futurista -->
-                <div id="countdownContainer" class="countdown-container" style="display: none;">
+                <!-- Contador de 5 segundos -->
+                <div id="shortCountdownContainer" class="short-countdown-container" style="display: none;">
                     <div class="countdown-title">Redirección automática a</div>
-                    <div class="countdown-display" id="countdownNumber">5</div>
-                    <div class="countdown-text">Sección Premium de AppCreator24</div>
+                    <div class="short-countdown-display" id="shortCountdownNumber">5</div>
+                    <div class="short-countdown-text">Sección Premium de AppCreator24</div>
                 </div>
                 
                 <div class="result-details" id="successDetails">
@@ -631,19 +794,32 @@
         // CONFIGURACIÓN SEGURA
         // ============================================
         
-        // URL de tu API (NO VISIBLE PARA USUARIOS)
+        // URL de tu API
         const API_URL = 'https://script.google.com/macros/s/AKfycbxazYQ1ZQUZNZ2WWR73W6gL_hn54KX7ptt0WuWpHoG8du-ake24aU4HUe3irv-Efjs1AA/exec';
         
         // Configuración
         const COUNTDOWN_SECONDS = 5;
+        const PREMIUM_STORAGE_KEY = 'premium_user_token';
+        const PREMIUM_EXPIRY_KEY = 'premium_expiry_date';
+        const PREMIUM_ACTIVATION_KEY = 'premium_activation_date';
+        const PREMIUM_DAYS = 365; // 1 año
         
         // Variables de estado
-        let countdownInterval = null;
+        let shortCountdownInterval = null;
+        let yearCountdownInterval = null;
         let currentCode = '';
         
         // ============================================
-        // ELEMENTOS DEL DOM
+        // ELEMENTOS DEL DOM (NUEVOS AÑADIDOS)
         // ============================================
+        
+        const premiumActiveContainer = document.getElementById('premiumActiveContainer');
+        const premiumActiveBtn = document.getElementById('premiumActiveBtn');
+        const yearCountdownDisplay = document.getElementById('yearCountdownDisplay');
+        const countdownSubtitle = document.getElementById('countdownSubtitle');
+        const countdownProgressBar = document.getElementById('countdownProgressBar');
+        const activationDate = document.getElementById('activationDate');
+        const expiryDate = document.getElementById('expiryDate');
         
         const codeInput = document.getElementById('codeInput');
         const verifyBtn = document.getElementById('verifyBtn');
@@ -661,8 +837,163 @@
         const copySuccessBtn = document.getElementById('copySuccessBtn');
         const redirectBtn = document.getElementById('redirectBtn');
         
-        const countdownContainer = document.getElementById('countdownContainer');
-        const countdownNumber = document.getElementById('countdownNumber');
+        const shortCountdownContainer = document.getElementById('shortCountdownContainer');
+        const shortCountdownNumber = document.getElementById('shortCountdownNumber');
+        
+        // ============================================
+        // SISTEMA DE ALMACENAMIENTO LOCAL
+        // ============================================
+        
+        // Guardar token premium localmente
+        function savePremiumToken(code) {
+            const activationDate = new Date();
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + PREMIUM_DAYS);
+            
+            const premiumData = {
+                code: code,
+                activatedDate: activationDate.toISOString(),
+                expiryDate: expiryDate.toISOString(),
+                isValid: true,
+                daysTotal: PREMIUM_DAYS
+            };
+            
+            localStorage.setItem(PREMIUM_STORAGE_KEY, JSON.stringify(premiumData));
+            localStorage.setItem(PREMIUM_EXPIRY_KEY, expiryDate.toISOString());
+            localStorage.setItem(PREMIUM_ACTIVATION_KEY, activationDate.toISOString());
+            
+            console.log('✅ Token premium guardado:', code);
+            console.log('📅 Fecha de activación:', activationDate.toLocaleDateString());
+            console.log('📅 Fecha de expiración:', expiryDate.toLocaleDateString());
+        }
+        
+        // Verificar si hay token premium válido
+        function checkPremiumToken() {
+            try {
+                const premiumData = localStorage.getItem(PREMIUM_STORAGE_KEY);
+                const expiryDateStr = localStorage.getItem(PREMIUM_EXPIRY_KEY);
+                
+                if (!premiumData || !expiryDateStr) {
+                    return { isValid: false, reason: 'No hay token guardado' };
+                }
+                
+                const data = JSON.parse(premiumData);
+                const expiryDate = new Date(expiryDateStr);
+                const activationDate = new Date(data.activatedDate);
+                const now = new Date();
+                
+                // Verificar expiración
+                if (now > expiryDate) {
+                    // Token expirado, limpiar
+                    clearPremiumToken();
+                    return { isValid: false, reason: 'Token expirado' };
+                }
+                
+                // Calcular días restantes
+                const timeDiff = expiryDate.getTime() - now.getTime();
+                const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+                // Calcular progreso
+                const totalTime = PREMIUM_DAYS * 24 * 60 * 60 * 1000;
+                const elapsedTime = now.getTime() - activationDate.getTime();
+                const progressPercentage = Math.min((elapsedTime / totalTime) * 100, 100);
+                
+                return {
+                    isValid: true,
+                    code: data.code,
+                    activatedDate: data.activatedDate,
+                    expiryDate: expiryDateStr,
+                    daysRemaining: daysRemaining,
+                    progress: progressPercentage,
+                    daysTotal: PREMIUM_DAYS
+                };
+                
+            } catch (error) {
+                console.error('Error verificando token:', error);
+                return { isValid: false, reason: 'Error en datos' };
+            }
+        }
+        
+        // Limpiar token premium
+        function clearPremiumToken() {
+            localStorage.removeItem(PREMIUM_STORAGE_KEY);
+            localStorage.removeItem(PREMIUM_EXPIRY_KEY);
+            localStorage.removeItem(PREMIUM_ACTIVATION_KEY);
+            console.log('🗑️ Token premium eliminado');
+        }
+        
+        // Actualizar contador de 365 días
+        function updateYearCountdown() {
+            const premiumStatus = checkPremiumToken();
+            
+            if (premiumStatus.isValid) {
+                // Actualizar display
+                yearCountdownDisplay.textContent = premiumStatus.daysRemaining;
+                countdownSubtitle.textContent = premiumStatus.daysRemaining === 1 ? 'día restante' : 'días restantes';
+                
+                // Actualizar barra de progreso
+                const remainingPercentage = 100 - premiumStatus.progress;
+                countdownProgressBar.style.width = `${remainingPercentage}%`;
+                
+                // Actualizar fechas
+                const activation = new Date(premiumStatus.activatedDate);
+                const expiry = new Date(premiumStatus.expiryDate);
+                
+                activationDate.textContent = activation.toLocaleDateString('es-CU', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                expiryDate.textContent = expiry.toLocaleDateString('es-CU', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                // Cambiar color según días restantes
+                if (premiumStatus.daysRemaining <= 7) {
+                    yearCountdownDisplay.style.color = '#ef4444';
+                    yearCountdownDisplay.style.textShadow = '0 0 10px rgba(239, 68, 68, 0.5)';
+                } else if (premiumStatus.daysRemaining <= 30) {
+                    yearCountdownDisplay.style.color = '#f59e0b';
+                    yearCountdownDisplay.style.textShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
+                }
+            }
+        }
+        
+        // Mostrar/Ocultar secciones según estado premium
+        function updatePremiumUI() {
+            const premiumStatus = checkPremiumToken();
+            
+            if (premiumStatus.isValid) {
+                // MOSTRAR: Botón de premium activado
+                // OCULTAR: Formulario principal
+                premiumActiveContainer.style.display = 'block';
+                document.querySelector('.main-card').style.display = 'none';
+                document.querySelector('.info-box').style.display = 'none';
+                
+                // Actualizar contador de 365 días
+                updateYearCountdown();
+                
+                // Iniciar intervalo para actualizar contador cada minuto
+                if (yearCountdownInterval) clearInterval(yearCountdownInterval);
+                yearCountdownInterval = setInterval(updateYearCountdown, 60000); // Cada minuto
+                
+            } else {
+                // MOSTRAR: Formulario principal
+                // OCULTAR: Botón de premium activado
+                premiumActiveContainer.style.display = 'none';
+                document.querySelector('.main-card').style.display = 'block';
+                document.querySelector('.info-box').style.display = 'block';
+                
+                // Detener intervalo
+                if (yearCountdownInterval) {
+                    clearInterval(yearCountdownInterval);
+                    yearCountdownInterval = null;
+                }
+            }
+        }
         
         // ============================================
         // FUNCIONES DE UTILIDAD
@@ -685,10 +1016,10 @@
         // Mostrar resultado
         function showResult(type, title, message, details = null) {
             // Detener cualquier countdown previo
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-                countdownInterval = null;
-                countdownContainer.style.display = 'none';
+            if (shortCountdownInterval) {
+                clearInterval(shortCountdownInterval);
+                shortCountdownInterval = null;
+                shortCountdownContainer.style.display = 'none';
             }
             
             // Ocultar resultados
@@ -713,7 +1044,7 @@
                 successResult.style.animation = 'fadeIn 0.5s ease';
                 
             } else {
-                // ERROR - NO mostrar countdown
+                // ERROR
                 errorTitle.textContent = title;
                 errorMessage.textContent = message;
                 errorResult.style.display = 'block';
@@ -727,53 +1058,73 @@
             }, 100);
         }
         
-        // 🔥 CORRECCIÓN: Redirigir SOLAMENTE con go:premiumpro
+        // 🔥 CORRECCIÓN: Redirigir correctamente
         function redirectToAppCreator() {
-            // SOLO go:premiumpro - SIN parámetros
             console.log('🔗 Redirigiendo a: go:premiumpro');
-            window.location.href = 'go:premiumpro';
+            
+            // Método 1: Intentar con window.location.href
+            try {
+                window.location.href = 'go:premiumpro';
+            } catch (error) {
+                console.error('Error con método 1:', error);
+                
+                // Método 2: Intentar con window.location.replace
+                try {
+                    window.location.replace('go:premiumpro');
+                } catch (error2) {
+                    console.error('Error con método 2:', error2);
+                    
+                    // Método 3: Intentar abrir nueva pestaña
+                    try {
+                        window.open('go:premiumpro', '_blank');
+                    } catch (error3) {
+                        console.error('Error con método 3:', error3);
+                        showAlert('error', 'No se pudo redirigir. Contacta soporte.');
+                    }
+                }
+            }
         }
         
-        // Iniciar countdown futurista
-        function startCountdown(seconds) {
-            countdownContainer.style.display = 'block';
+        // Iniciar countdown de 5 segundos
+        function startShortCountdown(seconds) {
+            shortCountdownContainer.style.display = 'block';
             let remaining = seconds;
             
             // Actualizar display inicial
-            countdownNumber.textContent = remaining;
-            countdownNumber.style.color = '#7c3aed';
+            shortCountdownNumber.textContent = remaining;
+            shortCountdownNumber.style.color = '#7c3aed';
             
             // Efecto de entrada
-            countdownContainer.style.transform = 'scale(0.9)';
+            shortCountdownContainer.style.transform = 'scale(0.9)';
             setTimeout(() => {
-                countdownContainer.style.transform = 'scale(1)';
-                countdownContainer.style.transition = 'transform 0.3s ease';
+                shortCountdownContainer.style.transform = 'scale(1)';
+                shortCountdownContainer.style.transition = 'transform 0.3s ease';
             }, 10);
             
             // Intervalo del countdown
-            countdownInterval = setInterval(() => {
+            shortCountdownInterval = setInterval(() => {
                 remaining--;
                 
                 // Cambiar color según segundos restantes
                 if (remaining <= 2) {
-                    countdownNumber.style.color = '#ef4444';
-                    countdownNumber.style.textShadow = '0 0 15px rgba(239, 68, 68, 0.7)';
+                    shortCountdownNumber.style.color = '#ef4444';
+                    shortCountdownNumber.style.textShadow = '0 0 15px rgba(239, 68, 68, 0.7)';
                 } else if (remaining <= 3) {
-                    countdownNumber.style.color = '#f59e0b';
-                    countdownNumber.style.textShadow = '0 0 15px rgba(245, 158, 11, 0.7)';
+                    shortCountdownNumber.style.color = '#f59e0b';
+                    shortCountdownNumber.style.textShadow = '0 0 15px rgba(245, 158, 11, 0.7)';
                 }
                 
                 // Efecto de latido
-                countdownNumber.style.transform = 'scale(1.1)';
+                shortCountdownNumber.style.transform = 'scale(1.1)';
                 setTimeout(() => {
-                    countdownNumber.style.transform = 'scale(1)';
+                    shortCountdownNumber.style.transform = 'scale(1)';
                 }, 200);
                 
-                countdownNumber.textContent = remaining;
+                shortCountdownNumber.textContent = remaining;
                 
                 // Cuando llegue a 0
                 if (remaining <= 0) {
-                    clearInterval(countdownInterval);
+                    clearInterval(shortCountdownInterval);
                     redirectToAppCreator();
                 }
             }, 1000);
@@ -849,7 +1200,7 @@
         }
         
         // ============================================
-        // FUNCIÓN PRINCIPAL
+        // FUNCIÓN PRINCIPAL DE VERIFICACIÓN
         // ============================================
         
         async function verifyCode() {
@@ -885,7 +1236,10 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // ÉXITO: Mostrar detalles y iniciar countdown
+                    // ÉXITO: Guardar token localmente
+                    savePremiumToken(code);
+                    
+                    // Mostrar detalles
                     const details = formatDetails(result.data);
                     
                     showResult('success',
@@ -909,19 +1263,24 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
                     
                     copySuccessBtn.onclick = () => copyToClipboard(copyText);
                     
-                    // 🔥 CORRECCIÓN: Configurar redirección SIMPLE
+                    // Configurar redirección
                     redirectBtn.onclick = redirectToAppCreator;
                     
-                    // Iniciar countdown AUTOMÁTICO
+                    // Iniciar countdown AUTOMÁTICO de 5 segundos
                     setTimeout(() => {
-                        startCountdown(COUNTDOWN_SECONDS);
+                        startShortCountdown(COUNTDOWN_SECONDS);
                     }, 1000);
                     
                     // Limpiar input
                     codeInput.value = '';
                     
+                    // Actualizar UI para mostrar botón premium después del countdown
+                    setTimeout(() => {
+                        updatePremiumUI();
+                    }, (COUNTDOWN_SECONDS + 1) * 1000);
+                    
                 } else {
-                    // ERROR: No iniciar countdown
+                    // ERROR
                     showResult('error',
                         'Código no válido',
                         result.message || 'El código no pudo ser verificado.'
@@ -944,24 +1303,30 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
         // EVENT LISTENERS
         // ============================================
         
+        // Verificar código
         verifyBtn.addEventListener('click', verifyCode);
         
+        // Tecla Enter en input
         codeInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') verifyCode();
         });
         
+        // Limpiar formulario
         clearBtn.addEventListener('click', () => {
             codeInput.value = '';
             codeInput.focus();
             successResult.style.display = 'none';
             errorResult.style.display = 'none';
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-                countdownContainer.style.display = 'none';
+            if (shortCountdownInterval) {
+                clearInterval(shortCountdownInterval);
+                shortCountdownContainer.style.display = 'none';
             }
         });
         
-        // Autoformatear
+        // Botón premium activado (NUEVO)
+        premiumActiveBtn.addEventListener('click', redirectToAppCreator);
+        
+        // Autoformatear código
         codeInput.addEventListener('input', function() {
             let value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
             
@@ -978,9 +1343,9 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
             if (value.length > 0) {
                 successResult.style.display = 'none';
                 errorResult.style.display = 'none';
-                if (countdownInterval) {
-                    clearInterval(countdownInterval);
-                    countdownContainer.style.display = 'none';
+                if (shortCountdownInterval) {
+                    clearInterval(shortCountdownInterval);
+                    shortCountdownContainer.style.display = 'none';
                 }
             }
         });
@@ -990,12 +1355,18 @@ Teléfono: ${result.data?.telefono || 'No registrado'}
         // ============================================
         
         window.addEventListener('load', () => {
-            codeInput.focus();
+            // Primero verificar si ya tiene premium
+            updatePremiumUI();
+            
+            // Si no tiene premium, enfocar el input
+            if (!checkPremiumToken().isValid) {
+                codeInput.focus();
+            }
             
             // Verificar código desde URL
             const urlParams = new URLSearchParams(window.location.search);
             const codeFromUrl = urlParams.get('code');
-            if (codeFromUrl) {
+            if (codeFromUrl && !checkPremiumToken().isValid) {
                 codeInput.value = formatCode(codeFromUrl);
                 setTimeout(() => verifyCode(), 1000);
             }
