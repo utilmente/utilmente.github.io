@@ -1064,19 +1064,19 @@
             
             // Método 1: Intentar con window.location.href
             try {
-                window.location.href = 'go:premiumpro';
+                window.location.href = 'go:probot';
             } catch (error) {
                 console.error('Error con método 1:', error);
                 
                 // Método 2: Intentar con window.location.replace
                 try {
-                    window.location.replace('go:premiumpro');
+                    window.location.replace('go:probot');
                 } catch (error2) {
                     console.error('Error con método 2:', error2);
                     
                     // Método 3: Intentar abrir nueva pestaña
                     try {
-                        window.open('go:premiumpro', '_blank');
+                        window.open('go:probot', '_blank');
                     } catch (error3) {
                         console.error('Error con método 3:', error3);
                         showAlert('error', 'No se pudo redirigir. Contacta soporte.');
